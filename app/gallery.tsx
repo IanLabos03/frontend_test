@@ -38,7 +38,6 @@ const Gallery = ({ users }: GalleryProps) => {
   }, [usersList, sortField, sortDirection]);
 
   useEffect(() => {
-    // Update usersList when sorting options change
     setUsersList(sortedUsers);
   }, [sortField, sortDirection, setUsersList, sortedUsers]);
 
