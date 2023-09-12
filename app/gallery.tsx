@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Avatar from "boring-avatars";
 import {
   FaRegCircleXmark,
@@ -10,21 +10,38 @@ import {
 } from "react-icons/fa6";
 
 import Modal from "./modal";
+import axios from "axios";
 
 import { User } from "./types/user";
 
-export type GalleryProps = {
-  users: User[];
-};
-const Gallery = ({ users }: GalleryProps) => {
-  const [usersList, setUsersList] = useState(users);
+// export type GalleryProps = {
+//   users: User[];
+// };
+const Gallery = () => {
+  const [usersList, setUsersList] = useState<any>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleModalOpen = (id: number) => {
-    const user = usersList.find((item) => item.id === id) || null;
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      // console.log({ response });
+      setUsersList(response.data);
+    } catch (error) {
+      // console.log({ error });
+    }
+  };
 
-    if(user) {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleModalOpen = (id: number) => {
+    const user = usersList.find((item: any) => item.id === id) || null;
+
+    if (user) {
       setSelectedUser(user);
       setIsModalOpen(true);
     }
@@ -39,7 +56,7 @@ const Gallery = ({ users }: GalleryProps) => {
     <div className="user-gallery">
       <h1 className="heading">Users</h1>
       <div className="items">
-        {usersList.map((user, index) => (
+        {usersList.map((user: any, index: any) => (
           <div
             className="item user-card"
             key={index}
